@@ -1,0 +1,484 @@
+# dsh-bridge · DSH Remote Access / Remote Control Plugin
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/wenbin-wb/dsh-bridge/main/docs/banner.webp" alt="dsh-bridge banner" width="100%" />
+</p>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/@wenbin_wb/dsh-bridge"><img src="https://img.shields.io/npm/v/@wenbin_wb/dsh-bridge.svg?style=flat-square&color=38bdf8&logo=npm" alt="npm version" /></a>
+  <a href="https://www.npmjs.com/package/@wenbin_wb/dsh-bridge"><img src="https://img.shields.io/npm/dt/@wenbin_wb/dsh-bridge.svg?style=flat-square&color=fbbf24&logo=npm" alt="npm downloads" /></a>
+  <a href="https://github.com/wenbin-wb/dsh-bridge/releases"><img src="https://img.shields.io/github/v/release/wenbin-wb/dsh-bridge?style=flat-square&color=10b981&logo=github" alt="GitHub release" /></a>
+  <a href="https://github.com/wenbin-wb/dsh-bridge/stargazers"><img src="https://img.shields.io/github/stars/wenbin-wb/dsh-bridge?style=flat-square&color=f43f5e&logo=github" alt="GitHub stars" /></a>
+  <a href="https://nodejs.org/"><img src="https://img.shields.io/badge/Node.js-%E2%89%A522.19%20%7C%20%E2%89%A524-339933?style=flat-square&logo=node.js" alt="Node.js version" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/npm/l/@wenbin_wb/dsh-bridge?style=flat-square&color=a855f7" alt="license" /></a>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Security-Access%20Auth%20%2B%20PBKDF2-6366f1?style=flat-square&logo=security" alt="Security" />
+  <img src="https://img.shields.io/badge/WeChat-ClawBot%20%7C%20iLink-07C160?style=flat-square&logo=wechat" alt="WeChat" />
+  <img src="https://img.shields.io/badge/QQ%20Bot-OpenAPI%20v2-12B7F5?style=flat-square&logo=tencentqq" alt="QQ" />
+  <img src="https://img.shields.io/badge/Feishu-Channel%20SDK-00D6B9?style=flat-square&logo=lark" alt="Feishu" />
+  <img src="https://img.shields.io/badge/Telegram-Bot%20API-24A1DE?style=flat-square&logo=telegram" alt="Telegram" />
+  <img src="https://img.shields.io/badge/Cloudflare-Tunnel-F38020?style=flat-square&logo=cloudflare" alt="Cloudflare" />
+  <a href="https://dpharness.com/plugin/wenbin-wb/dsh-bridge" target="_blank" rel="noopener noreferrer"><img src="https://dpharness.com/badge/install/wenbin-wb/dsh-bridge.svg" alt="DSH Hub 实装验证" /></a>
+</p>
+
+<p align="center">
+  <a href="README.md">简体中文</a> | <b>English</b>
+</p>
+
+> **Multi-Channel Remote Access & Comprehensive Security Gateway Plugin for DeepSeek Harness (DSH remote access / remote control plugin, remote control)**
+> 
+> Scan a QR code on your phone to continue using DeepSeek Harness anywhere. Whether relaxing on the sofa, commuting, or working across networks—no need to stay at your PC or set up complex servers.
+> 
+> Seamlessly extends your local DeepSeek Harness instance to mobile web, standalone PWA app, secure public tunnels, and **WeChat / QQ / Feishu (Lark) / Telegram** bot matrix. Drive AI coding, run tasks, approve operations, and manage workspaces anytime, anywhere.
+>
+> 📖 Remote-access landing page: [docs/remote-connection.md](docs/remote-connection.md) | 🤖 Summary for AI: [llms.txt](llms.txt)
+
+---
+
+## Table of Contents
+
+- [✨ Key Features](#-key-features)
+- [📦 Requirements & Installation](#-requirements--installation)
+- [🚀 Core Features & Usage Guide](#-core-features--usage-guide)
+  - [1. 🛜 LAN Access & Multi-NIC Smart Selection](#1-🛜-lan-access--multi-nic-smart-selection)
+  - [2. 🌐 Public Tunnels (Cloudflare & Custom)](#2-🌐-public-tunnels-cloudflare--custom)
+  - [3. 📱 Mobile Experience & Standalone PWA](#3-📱-mobile-experience--standalone-pwa)
+  - [4. 🗂️ Web Remote Workspace Directory Picker](#4-🗂️-web-remote-workspace-directory-picker)
+  - [5. 🔐 Comprehensive Access Security & Admin Lock](#5-🔐-comprehensive-access-security--admin-lock)
+  - [6. 🤖 All-in-One IM Bot Matrix (WeChat / QQ / Feishu / Telegram)](#6-🤖-all-in-one-im-bot-matrix-wechat--qq--feishu--telegram)
+  - [7. 📊 Maintenance Dashboard & Graceful Restart](#7-📊-maintenance-dashboard--graceful-restart)
+- [💬 FAQ](#-faq)
+- [🛠️ Development & Contribution](#️-development--contribution)
+- [⭐ Star History](#-star-history)
+- [📄 License](#-license)
+
+---
+
+## ✨ Key Features
+
+- **🛜 Multi-NIC Smart Detection & Switching**: Automatically detects physical Wi-Fi, Ethernet, and virtual NICs (WSL/VMware/Docker); provides visual switching with persistent memory;
+- **🌐 Dual-Mode Cloudflare Public Tunnels**: Zero-login 1-click random temporary domains or Cloudflare Named Tunnel Token with auto-start on boot; built-in idle keepalive for SSE streams so remote live channels are never cut by the link;
+- **📡 Tunnel Observability**: end-to-end public-entry probe every 60s (DNS / TLS / edge / origin — catches "/ready looks fine but users cannot get in", flags suspected DNS poisoning with the resolved IP); shows the actual cloudflared path · version · source; warns when another cloudflared uses the same Tunnel Token;
+- **📱 Native-Grade Mobile UI & PWA**: Centered session header, native drawer sidebar with `[|` fold icon, anti-overlap responsive layout, PWA install support;
+- **🌏 UI Follows the DSH Language (Chinese / English)**: the settings panel (all five sections and cards), lock/unlock screens, remote workspace picker, command help and upgrade prompts switch language with `<html lang>`; the visitor login page (rendered before the DSH language is known) follows the browser's `Accept-Language` — no separate language setting;
+- **🗂️ Web Remote Workspace Directory Picker**: Mobile/remote visits pop up responsive tree directory browser; localhost visits route to OS native dialogs; supports `/addworkspace` IM command;
+- **🔐 Comprehensive Access Security & Dual Defenses**: QR code secret Token login, visitor password gate, independent admin anti-tamper lock; host physical privilege (`127.0.0.1`) & emergency terminal reset (`reset-auth`);
+- **🤖 All-in-One IM Bot Matrix (WeChat / QQ / Feishu / Telegram)**: Multi-workspace dispatching, cross-restart session persistence, streaming Markdown typewriter, Card 2.0 interactive approvals, and bidirectional file sharing; every platform also reports a **per-turn change digest** (which files changed) and `/diff` exports a `.patch` attachment;
+- **📊 Maintenance & Smooth Upgrades**: Host CPU / RAM / Uptime metrics, 1-click network diagnosis, JSON configuration backup & restore, npmmirror fast check & graceful restart.
+
+---
+
+## 📦 Requirements & Installation
+
+### Requirements
+
+1. **Node.js ≥ 22** (DSH requires `^22.19.0` or `≥ 24.0.0`)
+2. **dsh CLI available** (runnable directly in terminal)
+
+```bash
+# Verify environment
+node -v   # v22.19+ or v24+
+dsh --version
+```
+
+### DSH version compatibility
+
+This plugin supports **both old and new DSH releases** — there is no need to pick a plugin version to match your harness.
+
+| DSH version | Status |
+| --- | --- |
+| `0.1.0` ~ `0.1.1` | ✅ Supported (loopback-only RPC channel hardening) |
+| `0.1.2` ~ `0.1.4` | ✅ Supported |
+| `0.1.5-alpha.1` ~ `0.1.5-rc.2` | ✅ Supported (since v2.10.9) |
+| `0.1.6` ~ `0.1.7` | ✅ Supported (v2.12.x adapts to the 0.1.7 storage-format and grid-layout changes; backward-compat regression covers the 0.1.6 single-file layout) |
+| `0.2.0-rc.2` (Web, profile `web`) | ✅ Supported (since v2.12.4 host CSS-module class names are resolved at runtime; the full mobile UI acceptance suite passes on this version) |
+| Desktop builtin host `0.2.0-rc.2` (profile `desktop`) | ✅ Supported (v2.12.4 fixes the mobile settings styles vanishing on the desktop host; **verified on a real desktop install**) |
+
+> **About the built-in DSH authentication**: since `0.1.2`, `dsh web` ships browser authentication — it prints a URL carrying a one-time token (`http://127.0.0.1:3080/?token=…`), which is exchanged for a session cookie bound to the loopback address. Afterwards `/`, `/api` and every plugin RPC channel require that cookie.
+>
+> This is **complementary to, not a duplicate of**, this plugin's access-password gate: the built-in auth protects "the DSH process on local loopback", while this plugin's gate protects "remote access arriving over LAN or a public tunnel". The plugin's reverse proxy injects a valid loopback session cookie while forwarding, so phone / tunnel access needs **no** manual handling of DSH's `?token=` — just use it as documented on this page.
+
+### Installation
+
+```bash
+# Method 1: Install from npm (Recommended)
+dsh plugin --profile web add @wenbin_wb/dsh-bridge
+
+# Method 2: Global-permission-free npx installation
+npx --yes @deepseek-ai/dsh plugin --profile web add @wenbin_wb/dsh-bridge
+
+# Method 3: Install from source
+git clone https://github.com/wenbin-wb/dsh-bridge.git
+dsh plugin --profile web add ./dsh-bridge
+```
+
+### Upgrade
+
+```bash
+# Recommended: Click "🚀 1-Click Upgrade & Restart" in Web Settings > Remote Access
+
+# Or force install latest version via CLI:
+dsh plugin --profile web add @wenbin_wb/dsh-bridge@latest
+```
+
+### DSH Desktop (desktop app) installation
+
+The desktop (Electron) app runs on its own `desktop` profile — **a separate plugin installation from the Web profile** — so install it there as well:
+
+* **Option 1 · GUI (recommended)**: open **Settings → Plugins → "+ Add Plugin"** → type `@wenbin_wb/dsh-bridge` → on restricted networks pick the **China mainland mirror** as the install source → click **Install** → confirm the plugin is enabled under **Installed** → **restart DeepSeek Harness from the app menu** to load it.
+* **Option 2 · CLI**:
+
+```bash
+dsh plugin --profile desktop add @wenbin_wb/dsh-bridge
+```
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/wenbin-wb/dsh-bridge/main/docs/screenshots/desktop-plugin-install.webp" width="700" alt="Add the plugin in DSH Desktop (1) package name (2) mirror source (3) install (4) confirm enabled" />
+</p>
+
+---
+
+## 🚀 Core Features & Usage Guide
+
+Launch DeepSeek Harness, open Settings in the left sidebar, and click **"Remote Access"**:
+
+---
+
+### 1. 🛜 LAN Access & Multi-NIC Smart Selection
+
+Starts **automatically with DSH service**, zero configuration required.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/wenbin-wb/dsh-bridge/main/docs/screenshots/lan-access.webp" width="600" alt="LAN Access Console" />
+</p>
+
+* **Instant QR Code Scan**: Connect phone and PC to the same Wi-Fi, scan the QR code with phone camera to access mobile web UI;
+* **Multi-NIC Detection & Switching**: Automatically detects multiple network interfaces (physical Wi-Fi, Ethernet, WSL, VMware, Docker) and presents **"🛜 Network Interface / IP Selection"** dropdown; instantly regenerates QR codes upon selection and **persists choice across restarts**.
+
+---
+
+### 2. 🌐 Public Tunnels (Cloudflare & Custom)
+
+Access DeepSeek Harness from anywhere outside your home network without public IP or router port forwarding:
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/wenbin-wb/dsh-bridge/main/docs/screenshots/tunnel-access.webp" width="600" alt="Tunnel Access Configuration" />
+</p>
+
+- **Mode 1: Zero-Login Temporary Tunnel (Default)**:
+  - Click "Start"; automatically prepares `cloudflared` binary with permission self-healing;
+  - Instantly generates `https://*.trycloudflare.com` URL and QR code.
+- **Mode 2: Cloudflare Token Fixed Domain (Permanent · Free)**:
+  - Create a Tunnel in [Cloudflare Zero Trust Console](https://one.dash.cloudflare.com/) and bind your custom domain;
+  - Enter Tunnel Token & hostname in Advanced Settings, enable **"Auto-start with DSH"** for permanent fixed URL!
+  - (Optional) Adjust **network parameters** in the same form: protocol (QUIC / HTTP/2), edge IP (4 / 6 / auto), region (US / global) — whitelisted from official Cloudflare docs, defaults unchanged; restart the tunnel to apply, unsupported flags are skipped with a warning;
+- **Mode 3: Custom WebSocket Tunnel**:
+  - Connect to your personal VPS reverse proxy server ([View Setup Guide](docs/custom-tunnel.md)), equipped with per-message gzip and SSE optimization.
+
+- **📡 At-a-Glance Health**: the `Data plane` line = latest end-to-end public probe (every 60s, with resolved IP; failures distinguish "origin down" vs "suspected DNS poisoning/fake certificate"); the `cloudflared` line = actual binary path · version · source (system installs are not version-pinned); a yellow warning appears if another cloudflared uses the same Tunnel Token.
+
+> **Custom tunnel security note**: The tunnel server (`scripts/install-tunnel-server.sh`) only authenticates the *tunnel client control channel* with `TOKEN`; public HTTP/WebSocket requests forwarded through the tunnel domain are **not independently authenticated** — security relies entirely on the plugin's local Access Auth (the `x-dsh-internal-tunnel` marker prevents tunnel traffic from using the loopback exemption). Always enable **Access Auth** with a password/QR Token in the plugin settings (especially with `scope=all` or when exposed publicly); with no password set, anyone who knows the tunnel URL can reach your DSH.
+
+---
+
+### 3. 📱 Mobile Experience & Standalone PWA
+
+Deeply optimized for mobile screens and touch interactions:
+
+- **Clean Top Header**: Retains left drawer and right new session button, with centered dynamic session title;
+- **Native Sidebar Drawer**: Full DSH history & workspace grouping with native `[|` fold icon and swipe gestures;
+- **Standalone PWA Support**: Click "Add to Home Screen" in mobile browser to run as a 100% standalone fullscreen app;
+- **Anti-Overlap Responsive Layout**: Bottom toolbar adapts to screen width, preventing button collision.
+
+#### Mobile Chat & Workspace Experience
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/wenbin-wb/dsh-bridge/main/docs/screenshots/remote-web-mobile.webp" width="23%" alt="Mobile Home" />
+  &nbsp;
+  <img src="https://raw.githubusercontent.com/wenbin-wb/dsh-bridge/main/docs/screenshots/mobile-chat.webp" width="23%" alt="Mobile Chat" />
+  &nbsp;
+  <img src="https://raw.githubusercontent.com/wenbin-wb/dsh-bridge/main/docs/screenshots/mobile-drawer.webp" width="23%" alt="Mobile Drawer" />
+  &nbsp;
+  <img src="https://raw.githubusercontent.com/wenbin-wb/dsh-bridge/main/docs/screenshots/mobile-workspace-picker.webp" width="23%" alt="Mobile Workspace Picker" />
+</p>
+
+#### Remote Settings Center on Mobile
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/wenbin-wb/dsh-bridge/main/docs/screenshots/mobile-settings-lan.webp" width="23%" alt="LAN Settings" />
+  &nbsp;
+  <img src="https://raw.githubusercontent.com/wenbin-wb/dsh-bridge/main/docs/screenshots/mobile-settings-tunnel.webp" width="23%" alt="Tunnel Settings" />
+  &nbsp;
+  <img src="https://raw.githubusercontent.com/wenbin-wb/dsh-bridge/main/docs/screenshots/mobile-settings-im.webp" width="23%" alt="IM Bot Settings" />
+  &nbsp;
+  <img src="https://raw.githubusercontent.com/wenbin-wb/dsh-bridge/main/docs/screenshots/mobile-settings-security.webp" width="23%" alt="Security Settings" />
+</p>
+
+---
+
+### 4. 🗂️ Web Remote Workspace Directory Picker
+
+Solves the pain point of mobile browsers being unable to trigger PC native folder dialogs:
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/wenbin-wb/dsh-bridge/main/docs/screenshots/mobile-workspace-picker.webp" width="380" alt="Mobile Workspace Picker" />
+</p>
+
+* **Smart Routing**: PC localhost visits (`127.0.0.1`) invoke OS native file dialogs; mobile/remote visits pop up responsive bottom directory browser;
+* **Quick Access**: 1-click access to Windows drives (C:, D:) and standard system folders (Desktop, Documents, Downloads, Projects).
+
+---
+
+### 5. 🔐 Comprehensive Access Security & Admin Lock
+
+Open **"Security"** tab to establish bank-grade protection for your local development environment:
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/wenbin-wb/dsh-bridge/main/docs/screenshots/security-auth-config.webp" width="600" alt="Security Config" />
+</p>
+
+#### 1. 🛡️ Line 1: External Access Gateway
+- **QR Token Passwordless + Password Verification**: QR codes carry 256-bit encrypted Token for instant access; manual IP/domain visits require password;
+- **Channel Isolation**: Choose between "All Channels / Public Tunnels Only (LAN Passwordless) / LAN Only".
+
+<details>
+  <summary>📱 Click to view Remote Access Login Page</summary>
+  <br/>
+  <p align="center">
+    <img src="https://raw.githubusercontent.com/wenbin-wb/dsh-bridge/main/docs/screenshots/remote-auth-login.webp" width="500" alt="Remote Access Login Page" />
+  </p>
+</details>
+
+#### 2. 🔒 Line 2: Admin Console Anti-Tamper Lock
+- **Independent Admin Password**: Remote devices enter locked console, requiring admin password to view or modify tokens and bot configs;
+- **Strict Host Policy**: Option to restrict management solely to host machine (`127.0.0.1`).
+
+<details>
+  <summary>🖥️ Click to view Admin Console Lock Screen</summary>
+  <br/>
+  <p align="center">
+    <img src="https://raw.githubusercontent.com/wenbin-wb/dsh-bridge/main/docs/screenshots/admin-lock-screen.webp" width="500" alt="Admin Console Lock Screen" />
+  </p>
+</details>
+
+#### 3. 🛟 Triple Disaster Recovery (Never Locked Out)
+- **Host Physical Privilege**: PC localhost (`127.0.0.1`) enjoys permanent highest privilege, never locked;
+- **Terminal Emergency Reset**: Run `touch ~/.dsh/dsh-bridge/reset-auth` in terminal to reset passwords and security policy (takes effect on the next plugin start / DSH restart);
+- **Interactive Guidance**: Built-in interactive recovery guides on all auth pages.
+
+---
+
+### 6. 🤖 All-in-One IM Bot Matrix (WeChat / QQ / Feishu / Telegram)
+
+Interact with local AI agents directly inside your favorite messaging apps without opening a browser:
+
+* **🔀 Multiple accounts per platform**: WeChat / QQ / Feishu / Telegram can each run **several bots of the same platform in parallel** on one machine (e.g. two Feishu self-built apps, "Whale" and "Scale"), with credentials, persona, workspace, allow-list and session ownership fully isolated. Add one via **"+ Add account"** in Settings (up to 10 per platform). See the [multi-account guide](docs/multi-account.md) (Chinese).
+
+---
+
+#### 🟢 WeChat Bot (ClawBot / iLink)
+
+Scan QR code with personal WeChat account to chat, manage sessions, and approve permissions via official Tencent servers without public IP.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/wenbin-wb/dsh-bridge/main/docs/screenshots/wechat-bot-config.webp" width="600" alt="WeChat Bot Config" />
+</p>
+
+<details>
+  <summary>📱 Click to view WeChat Chat & Approval</summary>
+  <br/>
+  <p align="center">
+    <img src="https://raw.githubusercontent.com/wenbin-wb/dsh-bridge/main/docs/screenshots/wechat-chat.webp" width="380" alt="WeChat Chat" />
+  </p>
+</details>
+
+* **Quick Setup**: Remote Access > IM Bot > WeChat > Scan QR code > Send first message to auto-authorize. See [WeChat Guide](docs/wechat-usage.md).
+
+---
+
+#### 🐧 QQ Bot (OpenAPI v2)
+
+Official QQ Bot with direct/group @chat, Markdown rendering, interactive button keyboards, and rich media transfers.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/wenbin-wb/dsh-bridge/main/docs/screenshots/qq-bot-config.webp" width="600" alt="QQ Bot Config" />
+</p>
+
+<details>
+  <summary>📱 Click to view QQ Direct & Group Chat</summary>
+  <br/>
+  <p align="center">
+    <img src="https://raw.githubusercontent.com/wenbin-wb/dsh-bridge/main/docs/screenshots/qq-chat.webp" width="48%" alt="QQ Direct Chat" />
+    <img src="https://raw.githubusercontent.com/wenbin-wb/dsh-bridge/main/docs/screenshots/qq-group.webp" width="48%" alt="QQ Group Chat" />
+  </p>
+</details>
+
+* **Quick Setup**: Create bot on [QQ Open Platform](https://q.qq.com), fill AppID & Secret > Send first message to auto-authorize. See [QQ Guide](docs/qq-usage.md).
+
+---
+
+#### 🐦 Feishu (Lark) Bot (recommended · official Channel SDK)
+
+Built on the **official Feishu Channel SDK**: WebSocket transport with auto-reconnect, event verification/normalization, message rendering and chunking, streaming typewriter cards, and media upload/download are all handled by Feishu's own implementation (this plugin no longer maintains its own protocol stack). Onboarding is one scan away — click **"📱 Scan to create app"** in the settings panel and permissions, event subscriptions and card callbacks are provisioned automatically, no developer-console setup required (manual App ID / Secret entry is still supported). Long-connection mode needs **no public IP, no domain, no webhook**. See also: **cloud-doc comments**, the **native slash-command panel**, and approvals whose cards **update in place** after you decide.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/wenbin-wb/dsh-bridge/main/docs/screenshots/feishu-bot-config.webp" width="600" alt="Feishu: scan to create the app in one step" />
+</p>
+
+<details>
+  <summary>📱 Click to view Feishu Chat & Card Approval</summary>
+  <br/>
+  <p align="center">
+    <img src="https://raw.githubusercontent.com/wenbin-wb/dsh-bridge/main/docs/screenshots/feishu-chat.webp" width="380" alt="Feishu Chat" />
+  </p>
+</details>
+
+* **Cloud-doc comments**: mention the bot in a Feishu doc/sheet comment and the answer is posted back into that comment thread (no need to mention again when following up; comments are plain text — no streaming or cards).
+* **🚀 Scan to create app (recommended)**: click **"📱 Scan to create app"** in the settings panel > confirm with the Feishu mobile app; permissions, event subscriptions and card callbacks are provisioned automatically and the bot connects right away — no developer console needed. Tenant brand (Feishu / Lark) is detected automatically.
+* **⌨️ Native slash-command panel**: 12 commands (`/help`, `/new`, `/sessions`, `/use`, `/status`, `/diff`, `/ask`, …) are registered automatically so users can pick them from Feishu's `/` panel (Feishu PC ≥ 7.70 / mobile ≥ 7.71; typing them manually works on older clients).
+* **📄 Cloud-doc comments**: mention the bot in a Feishu doc/sheet comment and the answer is posted back into that comment thread (no need to mention again when following up; comments are plain text).
+* **🙋 Answer the Agent's questions**: when the Agent needs a decision (`ask_user_question` / plan review) the question is delivered to the chat — full option text and descriptions are shown in the card body, tap a button to answer (recommended option highlighted with ⭐), or reply with text (`/ask 1`, `/ask 1,3` for multi-select, `/ask =your answer`, `/ask 1; 2=1` for several questions). Only turns initiated from this IM are claimed, so questions raised in the web UI are never hijacked.
+* **👀 Live activity status**: while the Agent works, the top of its card shows what it is doing right now (`⌨️ 正在运行命令（npm test）`, `📝 正在编辑文件（…）`, `🤖 正在协调子智能体`, …, using the same wording as the web UI's "thinking / running command" hints), rendered as a quote block in italics so it never reads as body text. The card updates in place (no extra messages) and the status disappears when the turn ends (Feishu / Telegram). **Off by default** — enable it from the settings page.
+* **🛡 In-place approval cards**: after you approve/reject, the card turns into a result state (showing who decided and who requested; timeout/cancel are marked too) instead of sending a duplicate text message.
+* **Manual setup (existing app)**: create a self-built app on [Feishu Open Platform](https://open.feishu.cn/app), enable long connection > fill App ID & Secret. See [Feishu Guide](docs/feishu-usage.md).
+
+---
+
+#### ✈️ Telegram Bot (Bot API + Proxy Support)
+
+Official Telegram Bot API with Long Polling and **built-in zero-dependency HTTP/HTTPS proxy tunnel**.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/wenbin-wb/dsh-bridge/main/docs/screenshots/telegram-bot-config.webp" width="600" alt="Telegram Bot Config" />
+</p>
+
+* **Quick Setup**: Create bot with [@BotFather](https://t.me/BotFather) > Fill Bot Token (and optional proxy) > Send first message to auto-authorize. See [Telegram Guide](docs/telegram-usage.md).
+
+---
+
+#### Standardized IM Commands
+
+| Command | Description |
+| :--- | :--- |
+| *(Direct Text)* | Drives current active agent to think and code |
+| `/sessions` (or `/list`) | List all sessions grouped by workspace |
+| `/use N` (or `/resume N`) | Switch context to session number N |
+| `/rename <new title>` | Rename active session title |
+| `/workspaces` | List all registered workspaces in DSH |
+| `/addworkspace <path>` | Remotely register a local project folder |
+| `/new <prompt>` | Start a new session in current workspace |
+| `/new <prompt> @N` | Start a new session in workspace N |
+| `/stop` | Immediately abort current running task |
+| `/end` | End and suspend active session |
+| `/yes` / `/no` (or `1`/`2`) | Respond to sensitive operation permission approvals |
+| `/status` | View agent status and system summary |
+| `/help` | View full command and shortcut button help |
+
+---
+
+### 7. 📊 Maintenance Dashboard & Graceful Restart
+
+Open **"Maintenance"** tab to monitor health and manage operations:
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/wenbin-wb/dsh-bridge/main/docs/screenshots/mobile-remote-settings.webp" width="380" alt="Maintenance Dashboard" />
+</p>
+
+* **📊 Host System Metrics Dashboard**: Real-time CPU model, total/used RAM, Node heap memory, and DSH uptime;
+* **🔍 1-Click Network Diagnostics**: Diagnoses reverse proxy port, LAN IPv4, Cloudflare Anycast edge, and npm mirror latency;
+* **🗄️ Configuration Backup & Migration**: 1-click export/import of `.json` configuration files;
+* **🔄 Graceful Smooth Restart**: 1-click DSH service restart with automatic reconnect and page reload.
+
+---
+
+## 💬 FAQ
+
+<details>
+  <summary><b>Q0: What is dsh-bridge? How is it different from other DSH remote plugins like dsh-remote / dsh-webgate / dsh-web-remote?</b></summary>
+  <br/>
+
+  **In one sentence: dsh-bridge is the remote access / remote control plugin (remote control) for DeepSeek Harness — scan a QR code and keep using your local DSH from phone or public internet.** If you search "remote DSH plugins" or "how to remote control DSH", this is it.
+
+  1. **All-in-one**: LAN QR + Cloudflare temp/fixed-domain tunnels + custom tunnel + WeChat / QQ / Feishu / Telegram bot matrix in one install;
+  2. **Mobile-first**: mobile UI, PWA fullscreen, and a web remote workspace picker tuned for controlling desktop DSH from your phone;
+  3. **Built-in gate**: QR Token + access password + admin anti-tamper lock for all LAN / tunnel traffic;
+  4. **Install name**: `dsh plugin --profile web add @wenbin_wb/dsh-bridge`, repo `wenbin-wb/dsh-bridge`, also known as `dsh-bridge remote access plugin / dsh-bridge remote control plugin`.
+</details>
+
+<details>
+  <summary><b>Q1: Phone cannot connect after scanning QR code?</b></summary>
+  <br/>
+
+  1. **Wi-Fi Check**: Ensure phone and PC are on the same Wi-Fi network with AP isolation disabled;
+  2. **Multi-NIC Switching**: If WSL/VMware/VPN is enabled, switch to physical Wi-Fi/Ethernet IP in the **"🛜 Network Interface / IP Selection"** dropdown;
+  3. **Firewall**: Ensure firewall allows Node.js on port `3082`;
+  4. **Use Public Tunnel**: Enable Cloudflare Tunnel if crossing network segments.
+</details>
+
+<details>
+  <summary><b>Q2: How is IM Bot security ensured? Can strangers trigger my agent?</b></summary>
+  <br/>
+
+  1. **Strict Allowlist**: Built-in sender allowlist; only authorized users can drive the Agent;
+  2. **Auto First Authorization**: Admin sending the first message after login automatically binds to allowlist;
+  3. **Silent Drop**: Unauthorized messages are dropped at the lowest layer (Never fed to LLM).
+</details>
+
+<details>
+  <summary><b>Q3: What is the difference between Temporary and Fixed Cloudflare Tunnels?</b></summary>
+  <br/>
+
+  1. **Temporary (Default)**: Zero-login random `*.trycloudflare.com` domain, ideal for quick outdoor access;
+  2. **Fixed (Token Mode)**: Uses Cloudflare Zero Trust Named Tunnel Token to bind your own domain with auto-start on boot.
+</details>
+
+<details>
+  <summary><b>Q4: Will chat sessions and configurations be lost after upgrading or restarting DSH?</b></summary>
+  <br/>
+
+  1. **Persistent Configuration**: All credentials, allowlists, and passwords persist in `~/.dsh-bridge/`;
+  2. **Session Context Recovery**: Session history is persisted by DSH core engine; resume conversations with `/resume` anytime;
+  3. **Backup & Migration**: 1-click `.json` export/import in Maintenance tab.
+</details>
+
+---
+
+## 🛠️ Development & Contribution
+
+Contributions are welcome! Feel free to submit an Issue or Pull Request.
+
+```bash
+# 1. Clone repo
+git clone https://github.com/wenbin-wb/dsh-bridge.git
+cd dsh-bridge
+
+# 2. Install dependencies & build
+npm install
+npm run build:client
+
+# 3. Run unit tests
+npm test
+
+# 4. Link to local DSH Web Profile
+dsh plugin --profile web add .
+```
+
+---
+
+## ⭐ Star History
+
+<a href="https://www.star-history.com/?repos=wenbin-wb%2Fdsh-bridge&type=date&legend=top-left">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=wenbin-wb/dsh-bridge&type=date&theme=dark&legend=top-left" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=wenbin-wb/dsh-bridge&type=date&legend=top-left" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=wenbin-wb/dsh-bridge&type=date&legend=top-left" />
+ </picture>
+</a>
+
+---
+
+## 📄 License
+
+MIT © [wenbin-wb](https://github.com/wenbin-wb)

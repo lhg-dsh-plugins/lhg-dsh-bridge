@@ -1,0 +1,91 @@
+# Dependencies
+node_modules/
+yarn.lock
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Testing
+.jest/
+# 探针测试在 Windows 上运行时生成的 .cmd 包装（见 cloudflared-health-probe.test.mjs）
+test/fixtures/fake-cloudflared.cmd
+
+# Build outputs
+dist/
+build/
+*.tsbuildinfo
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# OS
+Thumbs.db
+
+# DSH Bridge specific
+.dsh-bridge/
+bin/cloudflared*
+
+# Temporary files
+*.tmp
+.cache/
+
+# Scratch / 复现与验收产物（含 Chrome for Testing 缓存，体积可达数百 MB）
+scratch/
+
+# IM 接收附件落盘目录（各平台把用户发来的图片与文件存到**会话工作区**里）。
+# 内容属于**用户隐私数据**（截图、文档等），绝不能被提交进仓库。
+# 路径由各平台 node.js 的 _processMedia/_processAttachments 决定：
+#   lib/feishu/node.js   → .feishu-media
+#   lib/qq/node.js       → .qq-media
+#   lib/wechat/node.js   → .wechat-media
+# 用 `**/` 前缀：这些目录位于会话工作区内，可能出现在仓库任意层级。
+**/.feishu-media/
+**/.qq-media/
+**/.wechat-media/
+
+# Debug
+debug.log
+
+# AI agent local skills and workspace data
+.agents/
+
+# Credentials (never commit)
+.credentials
+
+# Temporary project files (not for public repo)
+PROJECT_SUMMARY.md
+DELIVERY_*.md
+PUSH_READY.md
+push-to-github.ps1
+market-submission.md
+
+# Internal design/planning docs (kept locally, not published)
+docs/wechat-bot-plan.md
+docs/fix-plan-*.md
+
+# Note: CODE_STANDARDS.md, CODE_REVIEW.md, and other docs are kept in repo
+# They are part of the project documentation
